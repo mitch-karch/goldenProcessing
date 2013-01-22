@@ -11,12 +11,12 @@ void setup(){
 	size(512, 512);
 	smooth();
 	noStroke();
-	frameRate(1);
+	frameRate(10);
 	ellipseMode(CENTER);
 }
 
 void draw(){
-	background(#756F66);
+	background(244);
 	
 	float generation = currGen+1;
 	float rad    = width/2 - 64; 				//What does rad do? Magic Number 1 --> 64
@@ -26,7 +26,7 @@ void draw(){
 	for(int i=0; i<generation;i++){
 		float angle = i*goldenAngle;
 		fill(100+(i*5)%100);					//Colorss
-		
+		fill(value1, value2, value3, alpha);
 		float itterativeRatio  = i/ (float) (generation-1);
 		float nodeOffset       = asmall*offSet*2*itterativeRatio - asmall*offSet;
 		float nodeArea         = asmall + nodeOffset;
