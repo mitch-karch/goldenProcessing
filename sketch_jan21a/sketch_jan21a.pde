@@ -4,9 +4,18 @@
 float goldenRatio = (sqrt(5)+1)/2;
 float goldenAngle = (goldenRatio-1)*2*PI;
 float offSet      = .9;      
-int currGen        = 0;
+int currGen       = 0;
+int counter       = 0;
 float lastX = width/2;
 float lastY = width/2;
+int i=0;  //Yes this is bad practice
+//Colors
+int R = (int)(goldenRatio+(i*goldenRatio)%255);
+int G = (int)(goldenRatio+(i)%255);
+int B = (int)(goldenRatio+(i*goldenRatio)%255);
+
+
+
 
 void setup(){
   size(512, 512);
@@ -16,6 +25,7 @@ void setup(){
 }
 
 void draw(){
+  
   background(goldenRatio);
   
   float generation = currGen+1;
@@ -23,12 +33,12 @@ void draw(){
   float asmall = (goldenRatio*rad*rad)/generation;   //What does asmall do?
 
   float cumulativeArea = 0;              //What does cumulativeArea do?
-  for(int i=0; i<generation;i++){
+  i=0;
+  for(; i<generation;i++){
+
     float angle = i*goldenAngle;
     //fill(100+(i*5)%100);              //Colorss
-    int R = (int)(goldenRatio+(i*goldenRatio)%255);
-    int G = (int)(goldenRatio+goldenRatio+(i)%255);
-    int B = (int)(goldenRatio+(i)%255);
+    changeColor();
     fill(R,G,B);
     println("("+R+","+G+","+B+")");
     /**/
@@ -44,18 +54,51 @@ void draw(){
     float yLocation = width/2 + cos(angle)*(cumulativeRadius+nodeRadius);
     
     ellipse(xLocation-nodeRadius, yLocation-nodeRadius, nodeRadius*2, nodeRadius*2);
-    //if(i==generation){
+    /*//if(i==generation-5){
       println("line at"+lastX+" "+lastY+" through "+ xLocation +" "+yLocation);
       stroke(255,0,0);
       line(lastX,lastY,xLocation,yLocation);
       lastX = xLocation;
       lastY = yLocation;
       noStroke();  
-    //}
+    //}/**/
     
     cumulativeArea += PI*nodeRadius*nodeRadius;
   }
   
   currGen++;
+
 }
 
+void mousePressed(){
+  counter++;
+  changeColor();
+}
+
+void changeColor(){
+  int colorSchemes = 3;
+  //Color Scheme changer
+  counter%=colorSchemes;
+  switch (counter){
+    case 0:
+      //Aubrey's Joker
+      R = (int)(goldenRatio+(i*goldenRatio)%256);
+      G = (int)(goldenRatio+(i)%256);
+      B = (int)(goldenRatio+(i*goldenRatio)%256);
+    break;
+
+    case 1 :
+      //Reds and Blues
+      R = (int)(i%256);
+      G = (int)(goldenRatio);
+      B = (int)(goldenRatio+(i*goldenRatio)%256);
+    break;
+
+    case 2:
+    //purple rose
+      R = (int)(i*goldenRatio%256);
+      G = (int)(goldenRatio/i%255);
+      B = (int)(goldenRatio+(i*goldenRatio)%256);
+    break;
+  }
+}
