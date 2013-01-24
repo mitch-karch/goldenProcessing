@@ -54,14 +54,14 @@ void draw(){
     float yLocation = width/2 + cos(angle)*(cumulativeRadius+nodeRadius);
     
     ellipse(xLocation-nodeRadius, yLocation-nodeRadius, nodeRadius*2, nodeRadius*2);
-    /*//if(i==generation-5){
+    /*if(generation%goldenRatio==0){
       println("line at"+lastX+" "+lastY+" through "+ xLocation +" "+yLocation);
       stroke(255,0,0);
       line(lastX,lastY,xLocation,yLocation);
       lastX = xLocation;
       lastY = yLocation;
       noStroke();  
-    //}/**/
+    }/**/
     
     cumulativeArea += PI*nodeRadius*nodeRadius;
   }
@@ -76,7 +76,7 @@ void mousePressed(){
 }
 
 void changeColor(){
-  int colorSchemes = 3;
+  int colorSchemes = 4;
   //Color Scheme changer
   counter%=colorSchemes;
   switch (counter){
@@ -98,6 +98,13 @@ void changeColor(){
     //purple rose
       R = (int)(i*goldenRatio%256);
       G = (int)(goldenRatio/i%255);
+      B = (int)(goldenRatio+(i*goldenRatio)%256);
+    break;
+
+    case 3:
+    //
+      R = (int)((i+goldenRatio)%256);
+      G = (int)((goldenRatio/i)%255);
       B = (int)(goldenRatio+(i*goldenRatio)%256);
     break;
   }
