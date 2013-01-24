@@ -114,9 +114,14 @@ void keyPressed(){
       delta++;
     }
     else if(keyCode == DOWN){
-      
       delta--;
       if(delta==0){delta=1;}
+    }
+    else if(keyCode == LEFT){
+      
+    }
+    else if(keyCode == RIGHT){
+      
     }
     else if(keyCode == CONTROL){
        if(drawLine==false){drawLine=true;}
