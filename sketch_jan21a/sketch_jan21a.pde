@@ -56,10 +56,10 @@ void draw(){
     float yLocation = width/2 + cos(angle)*(cumulativeRadius+nodeRadius);
     
     ellipse(xLocation-nodeRadius, yLocation-nodeRadius, nodeRadius*2, nodeRadius*2);
-    if(i%5==0){
+    if(i%mouseDelta==0){
       println("line at"+lastX+" "+lastY+" through "+ xLocation +" "+yLocation);
       stroke(255,255,255);
-      strokeWeight(mouseDelta);
+      strokeWeight(1);
       line(lastX,lastY,xLocation,yLocation);
       lastX = xLocation;
       lastY = yLocation;
@@ -113,5 +113,8 @@ void changeColor(){
   }
 }
 void mouseWheel(int delta){
-  mouseDelta = Math.abs(delta);
+  if(delta==0){
+    delta = 1;
+  }
+  mouseDelta = Math.abs(delta); 
 }
