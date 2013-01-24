@@ -1,27 +1,29 @@
-
+import java.awt.event.*;
 //Mitchell Karchemsky
 
 float goldenRatio = (sqrt(5)+1)/2;
 float goldenAngle = (goldenRatio-1)*2*PI;
 float offSet      = .9;      
 int currGen       = 0;
-int counter       = 0;
-float lastX = width/2;
-float lastY = width/2;
-int i=0;  //Yes this is bad practice
+float lastX       = width/2;
+float lastY       = width/2;
+int i             = 0;  //Yes this is bad practice
 //Colors
 int R = (int)(goldenRatio+(i*goldenRatio)%255);
 int G = (int)(goldenRatio+(i)%255);
 int B = (int)(goldenRatio+(i*goldenRatio)%255);
-
-
-
-
+//UI
+int counter       = 0;
+int mouseDelta    = 1;
 void setup(){
   size(512, 512);
   smooth();
   noStroke();
   frameRate(30);
+  addMouseWheelListener(new MouseWheelListener() { 
+    public void mouseWheelMoved(MouseWheelEvent mwe) { 
+      mouseWheel(mwe.getWheelRotation());
+  }}); 
 }
 
 void draw(){
@@ -54,9 +56,10 @@ void draw(){
     float yLocation = width/2 + cos(angle)*(cumulativeRadius+nodeRadius);
     
     ellipse(xLocation-nodeRadius, yLocation-nodeRadius, nodeRadius*2, nodeRadius*2);
-    /*if(generation%goldenRatio==0){
+    if(i%5==0){
       println("line at"+lastX+" "+lastY+" through "+ xLocation +" "+yLocation);
-      stroke(255,0,0);
+      stroke(255,255,255);
+      strokeWeight(mouseDelta);
       line(lastX,lastY,xLocation,yLocation);
       lastX = xLocation;
       lastY = yLocation;
@@ -108,4 +111,7 @@ void changeColor(){
       B = (int)(goldenRatio+(i*goldenRatio)%256);
     break;
   }
+}
+void mouseWheel(int delta){
+  mouseDelta = Math.abs(delta);
 }
