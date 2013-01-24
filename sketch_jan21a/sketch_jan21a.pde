@@ -1,4 +1,3 @@
-import java.awt.event.*;
 //Mitchell Karchemsky
 
 float goldenRatio = (sqrt(5)+1)/2;
@@ -14,16 +13,13 @@ int G = (int)(goldenRatio+(i)%255);
 int B = (int)(goldenRatio+(i*goldenRatio)%255);
 //UI
 int counter       = 0;
-int mouseDelta    = 1;
+int delta    = 1;
+boolean drawLine = false;
 void setup(){
   size(512, 512);
   smooth();
   noStroke();
   frameRate(30);
-  addMouseWheelListener(new MouseWheelListener() { 
-    public void mouseWheelMoved(MouseWheelEvent mwe) { 
-      mouseWheel(mwe.getWheelRotation());
-  }}); 
 }
 
 void draw(){
@@ -42,7 +38,7 @@ void draw(){
     //fill(100+(i*5)%100);              //Colorss
     changeColor();
     fill(R,G,B);
-    println("("+R+","+G+","+B+")");
+    //println("("+R+","+G+","+B+")");
     /**/
     float itterativeRatio  = i/(generation-1);
     float nodeOffset       = asmall*offSet*2*itterativeRatio - asmall*offSet;
@@ -56,8 +52,8 @@ void draw(){
     float yLocation = width/2 + cos(angle)*(cumulativeRadius+nodeRadius);
     
     ellipse(xLocation-nodeRadius, yLocation-nodeRadius, nodeRadius*2, nodeRadius*2);
-    if(i%mouseDelta==0){
-      println("line at"+lastX+" "+lastY+" through "+ xLocation +" "+yLocation);
+    if(drawLine==true&&i%delta==0){
+      //println("line at"+lastX+" "+lastY+" through "+ xLocation +" "+yLocation);
       stroke(255,255,255);
       strokeWeight(1);
       line(lastX,lastY,xLocation,yLocation);
@@ -112,9 +108,20 @@ void changeColor(){
     break;
   }
 }
-void mouseWheel(int delta){
-  if(delta==0){
-    delta = 1;
+void keyPressed(){
+  if(key == CODED){
+    if(keyCode == UP){
+      delta++;
+    }
+    else if(keyCode == DOWN){
+      
+      delta--;
+      if(delta==0){delta=1;}
+    }
+    else if(keyCode == CONTROL){
+       if(drawLine==false){drawLine=true;}
+       else{drawLine=false;}
+    }
   }
-  mouseDelta = Math.abs(delta); 
+  println(delta);
 }
