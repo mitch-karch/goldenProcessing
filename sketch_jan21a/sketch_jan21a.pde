@@ -8,13 +8,15 @@ float lastX       = width/2;
 float lastY       = width/2;
 int i             = 0;  //Yes this is bad practice
 //Colors
-int R = (int)(goldenRatio+(i*goldenRatio)%255);
-int G = (int)(goldenRatio+(i)%255);
-int B = (int)(goldenRatio+(i*goldenRatio)%255);
+int R             = (int)(goldenRatio+(i*goldenRatio)%255);
+int G             = (int)(goldenRatio+(i)%255);
+int B             = (int)(goldenRatio+(i*goldenRatio)%255);
 //UI
 int counter       = 0;
-int delta    = 1;
-boolean drawLine = false;
+int delta         = 1;
+boolean drawLine  = false;
+int radiusOffset     = 15;
+
 void setup(){
   size(512, 512);
   smooth();
@@ -27,19 +29,16 @@ void draw(){
   background(goldenRatio);
   
   float generation = currGen+1;
-  float rad    = width/2 - 64;             //What does rad do? Magic Number 1 --> 64
-  float asmall = (goldenRatio*rad*rad)/generation;   //What does asmall do?
+  float radius    = width/2 + radiusOffset;
+  float asmall = (goldenRatio*radius*radius)/generation;   //What does asmall do?
 
   float cumulativeArea = 0;              //What does cumulativeArea do?
-  i=0;
-  for(; i<generation;i++){
+  for(i=0;i<generation;i++){
 
     float angle = i*goldenAngle;
     //fill(100+(i*5)%100);              //Colorss
     changeColor();
     fill(R,G,B);
-    //println("("+R+","+G+","+B+")");
-    /**/
     float itterativeRatio  = i/(generation-1);
     float nodeOffset       = asmall*offSet*2*itterativeRatio - asmall*offSet;
     float nodeArea         = asmall + nodeOffset;
@@ -118,15 +117,17 @@ void keyPressed(){
       if(delta==0){delta=1;}
     }
     else if(keyCode == LEFT){
+      radiusOffset--;
+      if(delta==0){delta=1;} 
       
     }
     else if(keyCode == RIGHT){
-      
+      radiusOffset++;
     }
     else if(keyCode == CONTROL){
        if(drawLine==false){drawLine=true;}
        else{drawLine=false;}
     }
   }
-  println(delta);
+  println(radiusOffset);
 }
