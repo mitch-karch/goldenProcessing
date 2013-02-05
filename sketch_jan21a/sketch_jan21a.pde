@@ -1,4 +1,5 @@
 //Mitchell Karchemsky
+import controlP5.*;
 
 float goldenRatio = (sqrt(5)+1)/2;
 float goldenAngle = (goldenRatio-1)*2*PI;
@@ -6,7 +7,7 @@ float offSet      = .9;
 int currGen       = 0;
 float lastX       = width/2;
 float lastY       = width/2;
-int i             = 0;  //Yes this is bad practice
+int i             = 0; 
 //Colors
 int R             = (int)(goldenRatio+(i*goldenRatio)%255);
 int G             = (int)(goldenRatio+(i)%255);
@@ -15,57 +16,56 @@ int B             = (int)(goldenRatio+(i*goldenRatio)%255);
 int counter       = 0;
 int delta         = 1;
 boolean drawLine  = false;
-int radiusOffset     = 15;
-
+boolean pauseTime = false;
+int radiusOffset  = 15;
+//ControlP5
+ControlP5 controlP5;
+ControlWindow controlWindow;
+//Program Start
 void setup(){
-  size(512, 512);
+  size(1000, 1000);
   smooth();
   noStroke();
-  frameRate(30);
 }
 
 void draw(){
-  
   background(goldenRatio);
   
-  float generation = currGen+1;
+  float localGeneration = currGen+1;
   float radius    = width/2 + radiusOffset;
-  float asmall = (goldenRatio*radius*radius)/generation;   //What does asmall do?
+  float asmall = (goldenRatio*radius*radius)/localGeneration;   //What does asmall do?
 
   float cumulativeArea = 0;              //What does cumulativeArea do?
-  for(i=0;i<generation;i++){
+  for(i=0;i<localGeneration;i++){
 
     float angle = i*goldenAngle;
-    //fill(100+(i*5)%100);              //Colorss
+    fill(100+(i*5)%100);              //Colorss
     changeColor();
-    fill(R,G,B);
-    float itterativeRatio  = i/(generation-1);
+    //fill(R,G,B);
+    float itterativeRatio  = i/(localGeneration-1);
     float nodeOffset       = asmall*offSet*2*itterativeRatio - asmall*offSet;
     float nodeArea         = asmall + nodeOffset;
     float nodeRadius       = sqrt(nodeArea/PI);
     float cumulativeRadius = sqrt(cumulativeArea/PI);
     
-    nodeRadius *= min(1,(generation-i)/5.0);
+    nodeRadius *= min(1.2,(localGeneration-i)/32);
     
     float xLocation = width/2 + sin(angle)*(cumulativeRadius+nodeRadius);
     float yLocation = width/2 + cos(angle)*(cumulativeRadius+nodeRadius);
     
     ellipse(xLocation-nodeRadius, yLocation-nodeRadius, nodeRadius*2, nodeRadius*2);
     if(drawLine==true&&i%delta==0){
-      //println("line at"+lastX+" "+lastY+" through "+ xLocation +" "+yLocation);
       stroke(255,255,255);
-      strokeWeight(1);
+      strokeWeight(3);
       line(lastX,lastY,xLocation,yLocation);
       lastX = xLocation;
       lastY = yLocation;
       noStroke();  
-    }/**/
-    
+    }
     cumulativeArea += PI*nodeRadius*nodeRadius;
   }
   
   currGen++;
-
 }
 
 void mousePressed(){
@@ -117,17 +117,42 @@ void keyPressed(){
       if(delta==0){delta=1;}
     }
     else if(keyCode == LEFT){
-      radiusOffset--;
-      if(delta==0){delta=1;} 
-      
+      if(delta!=1){previousFib();}
     }
     else if(keyCode == RIGHT){
-      radiusOffset++;
+      delta++;
+      nextFib();
     }
     else if(keyCode == CONTROL){
        if(drawLine==false){drawLine=true;}
        else{drawLine=false;}
     }
+    else if(keyCode == ENTER){
+       if(pauseTime==false){pauseTime=true;}
+       else{pauseTime=false;}
+
+    }
   }
-  println(radiusOffset);
+  println(pauseTime);
+}
+
+void previousFib(){
+  int fibbIndex = 0;
+  while(delta > fib(fibbIndex)){
+    fibbIndex++;
+  }
+  delta = fib(fibbIndex-1);
+}
+
+void nextFib(){
+
+  int fibbIndex = 0;
+  while(delta > fib(fibbIndex)+1){
+    fibbIndex++;
+  }
+  delta = fib(fibbIndex);
+}
+
+int fib(int n){
+  return(n<=1?1:fib(n-1)+fib(n-2));
 }
